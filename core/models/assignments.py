@@ -45,11 +45,11 @@ class Assignment(db.Model):
         return cls.filter(cls.id == _id).first()
 
     @classmethod
-    def upsert(cls, assignment_new: 'Assignment'):
+    def upsert(cls, assignment_new):
         if assignment_new.id is not None:
             assignment = Assignment.get_by_id(assignment_new.id)
             assertions.assert_found(assignment, 'No assignment with this id was found')
-            assertions.assert_valid(assignment.state == AssignmentStateEnum.DRAFT,
+            assertions.assert_valid(assignment.state == AssignmentStateEnum.SUBMITTED ,
                                     'only assignment in draft state can be edited')
 
             assignment.content = assignment_new.content
@@ -104,12 +104,31 @@ class Assignment(db.Model):
         assignment = Assignment.get_by_id(_id)
         assertions.assert_valid(assignment.state != AssignmentStateEnum.GRADED,'No Techer has yet graded this assignment so cannot regrade')
         assertions.assert_found(assignment, 'No assignment with this id was found')
-        assertions.assert_valid(grade is not None, 'assignment with empty grade cannot be graded')
 
         assignment.grade = grade
         assignment.state = AssignmentStateEnum.GRADED
-        db.session.flush()
+        db.session.commit()
 
         return assignment
+    @classmethod
+    def create_assignment(cls,student_id,teacher_id,content):
+        if content is None:
+            content = ""
+        
+        teacher = Teacher.get_teachers_by_id(teacher_id)
+        student = Student.get_student_by_id(student_id)
+        assertions.assert_valid(student_id,'Student id cannot be null')
+        assertions.assert_valid(student,'No Such Student Exist')
+        assertions.assert_valid(teacher,'No Such Teacher Exist')
+        print(student_id)
+        
+        new_assignment = Assignment(student_id=student_id,teacher_id=teacher_id,content=content)
+        db.session.add(new_assignment)
+        created_assignment= cls.upsert(new_assignment)
+        db.session.flush()
+        return created_assignment
+
+
+
         
 

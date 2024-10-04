@@ -46,3 +46,15 @@ def submit_assignment(p, incoming_payload):
     db.session.commit()
     submitted_assignment_dump = AssignmentSchema().dump(submitted_assignment)
     return APIResponse.respond(data=submitted_assignment_dump)
+
+@student_assignments_resources.route('/assignments/create',methods=['POST'],strict_slashes=False)
+@decorators.accept_payload
+@decorators.authenticate_principal
+def new_assignment(p,incoming_payload):
+    """Create an assignment"""
+    create_assignment_payload = AssignmentSchema().load(incoming_payload)
+
+    new_assignment = Assignment.create_assignment(student_id=p.student_id,teacher_id=create_assignment_payload.teacher_id,content=create_assignment_payload.content) 
+    db.session.commit()
+    created_assignment  = AssignmentSchema().dump(new_assignment)
+    return APIResponse.respond(data=created_assignment)

@@ -11,7 +11,15 @@ class Teacher(db.Model):
 
     def __repr__(self):
         return '<Teacher %r>' % self.id
+    
+    @classmethod
+    def filter(cls, *criterion):
+        db_query = db.session.query(cls)
+        return db_query.filter(*criterion)
 
     @classmethod
     def get_all_techers(cls):
         return cls.query.all()
+    @classmethod
+    def get_teachers_by_id(cls,_id):
+        return cls.filter(cls.id == _id).first()
