@@ -22,7 +22,7 @@ def list_assignments(p):
     return APIResponse.respond(data=all_assignments_dump)
 
 
-@principal_resources.route('/assignments/regrade',methods=['POST'],strict_slashes=True)
+@principal_resources.route('/assignments/grade',methods=['POST'],strict_slashes=True)
 @decorators.accept_payload
 @decorators.authenticate_principal
 def regrade_assignments(p,incoming_payload):

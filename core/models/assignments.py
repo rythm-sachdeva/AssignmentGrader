@@ -110,23 +110,7 @@ class Assignment(db.Model):
         db.session.commit()
 
         return assignment
-    @classmethod
-    def create_assignment(cls,student_id,teacher_id,content):
-        if content is None:
-            content = ""
-        
-        teacher = Teacher.get_teachers_by_id(teacher_id)
-        student = Student.get_student_by_id(student_id)
-        assertions.assert_valid(student_id,'Student id cannot be null')
-        assertions.assert_valid(student,'No Such Student Exist')
-        assertions.assert_valid(teacher,'No Such Teacher Exist')
-        print(student_id)
-        
-        new_assignment = Assignment(student_id=student_id,teacher_id=teacher_id,content=content)
-        db.session.add(new_assignment)
-        created_assignment= cls.upsert(new_assignment)
-        db.session.flush()
-        return created_assignment
+    
 
 
 
