@@ -5,6 +5,7 @@ from core.libs import helpers, assertions
 from core.models.teachers import Teacher
 from core.models.students import Student
 from sqlalchemy.types import Enum as BaseEnum
+from sqlalchemy import and_
 
 
 class GradeEnum(str, enum.Enum):
@@ -91,3 +92,24 @@ class Assignment(db.Model):
     @classmethod
     def get_assignments_by_teacher(cls):
         return cls.query.all()
+    
+    @classmethod
+    def get_graded_and_submitted_assignments(cls):
+         return cls.filter(
+        and_(cls.grade != None, cls.state != AssignmentStateEnum.DRAFT)
+    ).all()
+
+    @classmethod
+    def re_grade(cls, _id, grade, auth_principal: AuthPrincipal):
+        assignment = Assignment.get_by_id(_id)
+        assertions.assert_valid(assignment.state != AssignmentStateEnum.GRADED,'No Techer has yet graded this assignment so cannot regrade')
+        assertions.assert_found(assignment, 'No assignment with this id was found')
+        assertions.assert_valid(grade is not None, 'assignment with empty grade cannot be graded')
+
+        assignment.grade = grade
+        assignment.state = AssignmentStateEnum.GRADED
+        db.session.flush()
+
+        return assignment
+        
+

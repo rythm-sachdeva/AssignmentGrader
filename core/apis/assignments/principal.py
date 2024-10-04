@@ -17,18 +17,18 @@ def list_teachers(p):
 @principal_resources.route('/assignments',methods=['GET'],strict_slashes=False)
 @decorators.authenticate_principal
 def list_assignments(p):
-    all_assignments = Assignment.get_assignments_by_teacher()
+    all_assignments = Assignment.get_graded_and_submitted_assignments()
     all_assignments_dump = AssignmentSchema().dump(all_assignments, many=True)
     return APIResponse.respond(data=all_assignments_dump)
 
 
-@principal_resources.route('/assignments/grade',methods=['POST'],strict_slashes=True)
+@principal_resources.route('/assignments/regrade',methods=['POST'],strict_slashes=True)
 @decorators.accept_payload
 @decorators.authenticate_principal
 def regrade_assignments(p,incoming_payload):
     grade_assignment_payload = AssignmentGradeSchema().load(incoming_payload)
 
-    graded_assignment = Assignment.mark_grade(
+    graded_assignment = Assignment.re_grade(
         _id=grade_assignment_payload.id,
         grade=grade_assignment_payload.grade,
         auth_principal=p
