@@ -2,8 +2,10 @@ FROM python:3.8-slim
 
 WORKDIR /app
 
-COPY . .
+COPY . /app
 
 RUN pip install -r requirements.txt
 
-CMD ["bash","run.sh"]
+EXPOSE 7755
+
+CMD bash run.sh
