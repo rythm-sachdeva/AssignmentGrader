@@ -1,33 +1,54 @@
-# Fyle Backend Challenge
+# School Management System
 
-## Who is this for?
+This project is a school management system built with Flask (or another framework) that provides different functionalities for three user roles: Principal, Students, and Teachers. The database includes a predefined set of users and allows for role-based functionalities, including managing users, assignments, and grading workflows.
 
-This challenge is meant for candidates who wish to intern at Fyle and work with our engineering team. You should be able to commit to at least 6 months of dedicated time for internship.
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+  - [Principal](#principal)
+  - [Student](#student)
+  - [Teacher](#teacher)
+- [Setup](#setup)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
 
-## Why work at Fyle?
+## Overview
+This application has five core resources:
+1. **Users** - General users of the application
+2. **Principal** - Has administrative privileges
+3. **Students** - Can create, edit, and submit assignments
+4. **Teachers** - Can review and grade assignments
+5. **Assignments** - Assignments created by students and graded by teachers
 
-Fyle is a fast-growing Expense Management SaaS product. We are ~40 strong engineering team at the moment. 
+The database includes sample data with:
+- 1 Principal
+- 2 Students
+- 2 Teachers
 
-We are an extremely transparent organization. Check out our [careers page](https://careers.fylehq.com) that will give you a glimpse of what it is like to work at Fyle. Also, check out our Glassdoor reviews [here](https://www.glassdoor.co.in/Reviews/Fyle-Reviews-E1723235.htm). You can read stories from our teammates [here](https://stories.fylehq.com).
+Each user role has specific access and functionalities for interacting with the resources.
 
+## Features
+### Principal
+- **View All Teachers**: A principal can access the list of all teachers.
+- **View All Assignments**: A principal can view all assignments that have been submitted or graded by teachers.
+- **Re-grade Assignments**: The principal can re-grade assignments that have already been graded by teachers.
 
-## Challenge outline
+### Student
+- **Create/Edit Draft Assignment**: Students can create and modify assignments in draft mode.
+- **View Created Assignments**: Students can list all assignments they have created.
+- **Submit Assignment**: Students can submit a draft assignment to a teacher.
 
-**You are allowed to use any online/AI tool such as ChatGPT, Gemini, etc. to complete the challenge. However, we expect you to fully understand the code and logic involved.**
+### Teacher
+- **View Submitted Assignments**: Teachers can view all assignments submitted to them by students.
+- **Grade Assignment**: Teachers can grade assignments submitted to them by students.
 
-This challenge involves writing a backend service for a classroom. The challenge is described in detail [here](./Application.md)
-
-
-## What happens next?
-
-You will hear back within 48 hours from us via email. 
-
-
-## Installation
-
-1. Fork this repository to your github account
-2. Clone the forked repository and proceed with steps mentioned below
-
+## Setup
+---
+### Clone The Repository
+   ```bash
+   git clone https://github.com/rythm-sachdeva/AssignmentGrader.git
+   cd school-management-system
+   ```
 ### Install requirements
 
 ```
@@ -47,12 +68,32 @@ flask db upgrade -d core/migrations/
 ```
 bash run.sh
 ```
-### Run Tests
 
-```
-pytest -vvv -s tests/
+## Usage
+Each user type has different access capabilities and functions. Use the appropriate login credentials to test each user role's functionalities.
 
-# for test coverage report
-# pytest --cov
-# open htmlcov/index.html
-```
+## API Endpoints
+Here's a brief list of API endpoints with functionality:
+
+### Principal Endpoints
+- **GET /api/principal/teachers**: View all teachers.
+- **GET /api/principal/assignments**: View all assignments submitted or graded.
+- **PUT /api/principal/assignments/<assignment_id>/regrade**: Re-grade an assignment.
+
+### Student Endpoints
+- **POST /api/student/assignments**: Create a new draft assignment.
+- **PUT /api/student/assignments/<assignment_id>**: Edit a draft assignment.
+- **GET /api/student/assignments**: List all created assignments.
+- **POST /api/student/assignments/<assignment_id>/submit**: Submit a draft assignment to a teacher.
+
+### Teacher Endpoints
+- **GET /api/teacher/assignments**: List assignments submitted to the teacher.
+- **PUT /api/teacher/assignments/<assignment_id>/grade**: Grade an assignment submitted by a student.
+
+## Contributing
+Contributions are welcome! Please submit a pull request or open an issue for any new ideas or improvements.
+
+---
+
+
+
