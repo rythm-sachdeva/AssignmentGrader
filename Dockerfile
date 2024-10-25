@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 7755
 
-CMD bash run.sh
+CMD ["bash","run.sh"]
